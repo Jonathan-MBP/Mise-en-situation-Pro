@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dirigeants | Gestion Immobilière</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <i data-lucide="building" class="logo-icon"></i>
+                <h1 class="logo-text">Property<br /><span>Manager</span></h1>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-view="global">
+                    <i data-lucide="globe"></i> Vue Globale
+                </button>
+                <button class="nav-btn" data-view="financial">
+                    <i data-lucide="dollar-sign"></i> Vue Financière
+                </button>
+                <button class="nav-btn" data-view="commercial">
+                    <i data-lucide="users"></i> Vue Commerciale
+                </button>
+                <button class="nav-btn" data-view="operational">
+                    <i data-lucide="tool"></i> Vue Opérationnelle
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title">
+                    <h2 id="view-title">Vue Globale</h2>
+                    <p class="subtitle">Performance générale du parc immobilier</p>
+                </div>
+                <div class="header-actions">
+                    <div class="user-avatar">
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-views">
+                <!-- Global View -->
+                <section id="view-global" class="view-section active">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Revenus Totaux</span>
+                                <div class="icon-wrapper bg-blue"><i data-lucide="dollar-sign"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-global-revenue">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+4.2%</span> vs
+                                N-1</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Taux d'Occupation</span>
+                                <div class="icon-wrapper bg-green"><i data-lucide="home"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-global-occupancy">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+1.5%</span> vs
+                                N-1</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Demandes Ouvertes</span>
+                                <div class="icon-wrapper bg-orange"><i data-lucide="wrench"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-global-requests">--</h3>
+                            <div class="kpi-trend negative"><i data-lucide="arrow-up-right"></i> <span>+2</span> vs N-1
+                            </div>
+                        </div>
+                        <div class="kpi-card critical">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Incidents Critiques</span>
+                                <div class="icon-wrapper bg-red"><i data-lucide="alert-triangle"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-global-incidents">--</h3>
+                            <div class="kpi-trend negative"><i data-lucide="arrow-up-right"></i> <span>+1</span> vs N-1
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card span-2">
+                            <h3>Évolution des Revenus & Dépenses</h3>
+                            <canvas id="globalRevenueChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Répartition des Incidents</h3>
+                            <canvas id="globalIncidentChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Financial View -->
+                <section id="view-financial" class="view-section">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Revenus Loyers</span>
+                                <div class="icon-wrapper bg-blue"><i data-lucide="building"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-fin-rent">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+5.1%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Taux de Collecte</span>
+                                <div class="icon-wrapper bg-green"><i data-lucide="check-circle"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-fin-collection">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+0.8%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Dépenses (OPEX)</span>
+                                <div class="icon-wrapper bg-orange"><i data-lucide="trending-down"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-fin-opex">--</h3>
+                            <div class="kpi-trend negative"><i data-lucide="arrow-up-right"></i> <span>+2.3%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Marge Nette</span>
+                                <div class="icon-wrapper bg-purple"><i data-lucide="pie-chart"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-fin-margin">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+3.2%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Dépôts de Garantie</span>
+                                <div class="icon-wrapper bg-blue"><i data-lucide="shield"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-fin-deposits">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+1.1%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card span-2">
+                            <h3>Analyse Revenus vs Coûts</h3>
+                            <canvas id="financialRevCostChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Structure des Coûts</h3>
+                            <canvas id="financialCostStructureChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Commercial View -->
+                <section id="view-commercial" class="view-section">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Taux d'Occupation</span>
+                                <div class="icon-wrapper bg-blue"><i data-lucide="home"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-com-occupancy">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+1.5%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Délai Moyen Location</span>
+                                <div class="icon-wrapper bg-orange"><i data-lucide="clock"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-com-delay">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-down-right"></i> <span>-2j</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Dépôts Collectés (YTD)</span>
+                                <div class="icon-wrapper bg-green"><i data-lucide="credit-card"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-com-deposits">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> <span>+4.5%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Rotation Locataires</span>
+                                <div class="icon-wrapper bg-purple"><i data-lucide="refresh-cw"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-com-turnover">--</h3>
+                            <div class="kpi-trend negative"><i data-lucide="arrow-up-right"></i> <span>+5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card span-2">
+                            <h3>Tendance du Taux d'Occupation (%)</h3>
+                            <canvas id="commercialOccupancyChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Échéances des Baux</h3>
+                            <canvas id="commercialLeaseChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Operational View -->
+                <section id="view-operational" class="view-section">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Délai Moyen Résolution</span>
+                                <div class="icon-wrapper bg-blue"><i data-lucide="clock"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-op-resolution">--</h3>
+                            <div class="kpi-trend positive"><i data-lucide="arrow-down-right"></i> <span>-0.5j</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Demandes Ouvertes</span>
+                                <div class="icon-wrapper bg-orange"><i data-lucide="wrench"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-op-open-requests">--</h3>
+                            <div class="kpi-trend negative"><i data-lucide="arrow-up-right"></i> <span>+2</span></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Coût Moyen par Unité</span>
+                                <div class="icon-wrapper bg-purple"><i data-lucide="settings"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-op-cost-unit">--</h3>
+                            <div class="kpi-trend negative"><i data-lucide="arrow-up-right"></i> <span>+15€</span></div>
+                        </div>
+                        <div class="kpi-card critical">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Incidents Critiques</span>
+                                <div class="icon-wrapper bg-red"><i data-lucide="alert-octagon"></i></div>
+                            </div>
+                            <h3 class="kpi-value" id="kpi-op-incidents">--</h3>
+                            <div class="kpi-trend negative"><i data-lucide="arrow-up-right"></i> <span>+1</span></div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card span-2">
+                            <h3>Délai de Résolution vs Objectif (Jours)</h3>
+                            <canvas id="operationalResolutionChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Demandes par Catégorie</h3>
+                            <canvas id="operationalRequestsChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
