@@ -88,7 +88,7 @@ def health():
             "database": f"Connected (buildings: {count})"
         }
     except Exception as e:
-        return {"status": "unhealthy", "error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"status": "unhealthy", "error": str(e)})
 
 # ============================================================================
 # MAP ENDPOINT — NEW
@@ -187,7 +187,7 @@ def buildings_map():
         }
         
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ============================================================================
 # GLOBAL ENDPOINTS
@@ -241,7 +241,7 @@ def global_summary():
             }
         }
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/global/revenue-expense")
 def global_revenue_expense():
@@ -265,7 +265,7 @@ def global_revenue_expense():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/global/incident-distribution")
 def global_incident_distribution():
@@ -285,7 +285,7 @@ def global_incident_distribution():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ============================================================================
 # FINANCIAL ENDPOINTS
@@ -318,7 +318,7 @@ def financial_monthly_summary():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/financial/cost-structure")
 def financial_cost_structure():
@@ -342,7 +342,7 @@ def financial_cost_structure():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/financial/deposits")
 def financial_deposits():
@@ -366,7 +366,7 @@ def financial_deposits():
         
         return {"data": df.to_dict(orient='records')[0]}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ============================================================================
 # COMMERCIAL ENDPOINTS
@@ -399,7 +399,7 @@ def commercial_occupancy_by_building():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/commercial/occupancy-trend")
 def commercial_occupancy_trend():
@@ -423,7 +423,7 @@ def commercial_occupancy_trend():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/commercial/lease-expirations")
 def commercial_lease_expirations():
@@ -450,7 +450,7 @@ def commercial_lease_expirations():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/commercial/turnover-rate")
 def commercial_turnover_rate():
@@ -472,7 +472,7 @@ def commercial_turnover_rate():
         
         return {"data": df.to_dict(orient='records')[0]}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ============================================================================
 # OPERATIONAL ENDPOINTS
@@ -501,7 +501,7 @@ def operational_maintenance_summary():
         
         return {"data": df.to_dict(orient='records')[0]}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/operational/open-requests")
 def operational_open_requests():
@@ -532,7 +532,7 @@ def operational_open_requests():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/operational/resolution-time-trend")
 def operational_resolution_time_trend():
@@ -558,7 +558,7 @@ def operational_resolution_time_trend():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/operational/requests-by-category")
 def operational_requests_by_category():
@@ -582,7 +582,7 @@ def operational_requests_by_category():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.get("/api/operational/incidents-summary")
 def operational_incidents_summary():
@@ -607,7 +607,7 @@ def operational_incidents_summary():
         
         return {"data": df.to_dict(orient='records')}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ============================================================================
 # DATABASE ENDPOINTS
@@ -643,7 +643,7 @@ def database_stats():
             "timestamp": datetime.now().isoformat()
         }
     except Exception as e:
-        return {"error": str(e)}, 500
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ============================================================================
 # RUN

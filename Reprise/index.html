@@ -3,320 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Dirigeants — Immobilier Paris</title>
-    
+    <meta name="description" content="Dashboard dirigeants ultra-coloré">
+    <meta name="theme-color" content="#090014">
+    <title>Neon Dashboard — Immobilier Paris</title>
+
+    <!-- Google Fonts — Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+
     <!-- Leaflet Map CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-    
+
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    
+
     <!-- Leaflet Map JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js"></script>
-    
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- ======================================================
+         BACKGROUND BLOBS (NEON GLOW)
+         ====================================================== -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- ======================================================
+         LOADING OVERLAY
+         ====================================================== -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-logo">NEON DASHBOARD</div>
+        <div class="loading-bar-wrap">
+            <div class="loading-bar"></div>
+        </div>
+        <p class="loading-text">Connexion à la matrice en cours…</p>
+    </div>
+
+    <!-- ======================================================
+         DASHBOARD
+         ====================================================== -->
     <div class="dashboard">
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
+
+        <!-- Overlay (ferme la sidebar sur mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- ==================================================
+             LEFT SIDEBAR (NAVIGATION)
+             ================================================== -->
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h1 class="logo">Dashboard</h1>
-                <p class="logo-subtitle">Dirigeants</p>
+                <h1 class="logo">NEON<br/>ESTATE</h1>
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    SYNCED
+                </div>
             </div>
-            
+
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-view="global">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-label">Vue Globale</span>
+                    <span class="nav-icon">✨</span>
+                    <span class="nav-label">Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-view="gallery">
+                    <span class="nav-icon">🏙️</span>
+                    <span class="nav-label">Galerie</span>
                 </a>
                 <a href="#" class="nav-item" data-view="financial">
-                    <span class="nav-icon">💰</span>
+                    <span class="nav-icon">💎</span>
                     <span class="nav-label">Finance</span>
                 </a>
                 <a href="#" class="nav-item" data-view="commercial">
-                    <span class="nav-icon">🏢</span>
+                    <span class="nav-icon">🚀</span>
                     <span class="nav-label">Commercial</span>
                 </a>
                 <a href="#" class="nav-item" data-view="operational">
-                    <span class="nav-icon">⚙️</span>
-                    <span class="nav-label">Opérationnel</span>
+                    <span class="nav-icon">⚡</span>
+                    <span class="nav-label">Opérations</span>
+                </a>
+                <a href="#" class="nav-item" data-view="team">
+                    <span class="nav-icon">🧑‍🎤</span>
+                    <span class="nav-label">L'Équipe</span>
                 </a>
                 <a href="#" class="nav-item" data-view="map">
                     <span class="nav-icon">🗺️</span>
-                    <span class="nav-label">Carte</span>
+                    <span class="nav-label">Hologram Map</span>
                 </a>
             </nav>
-            
+
             <div class="sidebar-footer">
-                <p class="team-label">Équipe</p>
-                <p class="team-members">Corentin • Jack • Jonathan • Daniela</p>
-                <p class="timestamp" id="last-update">Données à jour</p>
+                <p class="timestamp" id="last-update">Data Live</p>
             </div>
         </aside>
-        
-        <!-- MAIN CONTENT -->
+
+        <!-- ==================================================
+             MAIN CONTENT
+             ================================================== -->
         <main class="content">
+
             <!-- HEADER -->
             <header class="header">
-                <h2 class="header-title" id="view-title">Vue Globale</h2>
+                <div class="header-left">
+                    <button class="hamburger" id="hamburger-btn" aria-label="Menu">
+                        <span></span><span></span><span></span>
+                    </button>
+                    <div class="header-title-group">
+                        <h2 class="header-title" id="view-title">Overview</h2>
+                        <p class="header-subtitle">Performance globale en temps réel</p>
+                    </div>
+                </div>
                 <div class="header-actions">
                     <button class="btn-refresh" id="btn-refresh" title="Rafraîchir les données">
-                        ↻ Rafraîchir
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        <span class="btn-label">Refresh</span>
                     </button>
-                    <div class="user-avatar">👤</div>
+                    <img src="assets/images/avatar_corentin_1781261028342.png" class="user-avatar" alt="User">
                 </div>
             </header>
-            
+
             <!-- CONTENT AREA -->
             <div class="view-container">
-                
+
                 <!-- VUE GLOBALE -->
                 <section id="view-global" class="view-section active">
-                    <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Revenus Annuels</span>
-                                <span class="kpi-icon">💵</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-global-revenue">0 €</div>
-                            <div class="kpi-trend">+2.5% vs. année précédente</div>
-                        </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Taux d'Occupation</span>
-                                <span class="kpi-icon">🏠</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-global-occupancy">0 %</div>
-                            <div class="kpi-trend">En ligne avec cible (85%)</div>
-                        </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Demandes Ouvertes</span>
-                                <span class="kpi-icon">📋</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-global-requests">0</div>
-                            <div class="kpi-trend">Délai moyen : 3.5 jours</div>
-                        </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Incidents Critiques</span>
-                                <span class="kpi-icon">⚠️</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-global-incidents">0</div>
-                            <div class="kpi-trend">Aucun impact sur occupancy</div>
+                    <div class="banner-card">
+                        <img src="assets/images/banner_global_1781261008249.png" alt="Smart City Neon">
+                        <div class="banner-content">
+                            <h2>Performance Synthétique</h2>
+                            <p>Le portefeuille parisien affiche une croissance record ce mois-ci.</p>
                         </div>
                     </div>
-                    
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card" data-accent="purple">
+                            <div class="kpi-header">
+                                <span class="kpi-label">Revenus Annuels</span>
+                                <div class="kpi-icon-wrap purple">💵</div>
+                            </div>
+                            <div class="kpi-value" id="kpi-global-revenue">—</div>
+                            <div class="kpi-trend positive">↑ +2.5% vs. N-1</div>
+                        </div>
+                        <div class="kpi-card" data-accent="cyan">
+                            <div class="kpi-header">
+                                <span class="kpi-label">Taux d'Occupation</span>
+                                <div class="kpi-icon-wrap cyan">🏠</div>
+                            </div>
+                            <div class="kpi-value" id="kpi-global-occupancy">—</div>
+                            <div class="kpi-trend">Objectif atteint</div>
+                        </div>
+                        <div class="kpi-card" data-accent="orange">
+                            <div class="kpi-header">
+                                <span class="kpi-label">Demandes Ouvertes</span>
+                                <div class="kpi-icon-wrap orange">📋</div>
+                            </div>
+                            <div class="kpi-value" id="kpi-global-requests">—</div>
+                            <div class="kpi-trend">Délai : 3.5 jours</div>
+                        </div>
+                        <div class="kpi-card" data-accent="pink">
+                            <div class="kpi-header">
+                                <span class="kpi-label">Incidents Critiques</span>
+                                <div class="kpi-icon-wrap pink">⚠️</div>
+                            </div>
+                            <div class="kpi-value" id="kpi-global-incidents">—</div>
+                            <div class="kpi-trend">Aucun impact majeur</div>
+                        </div>
+                    </div>
                     <div class="charts-grid">
                         <div class="chart-container">
-                            <h3>Revenus vs Dépenses (12 mois)</h3>
+                            <h3>Revenus vs Dépenses</h3>
                             <canvas id="chart-revenue-expense"></canvas>
                         </div>
-                        
                         <div class="chart-container">
-                            <h3>Incidents par Type</h3>
+                            <h3>Distribution des Incidents</h3>
                             <canvas id="chart-incident-distribution"></canvas>
                         </div>
                     </div>
                 </section>
-                
-                <!-- VUE FINANCIÈRE -->
-                <section id="view-financial" class="view-section hidden">
-                    <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Revenu Loyers</span>
-                                <span class="kpi-icon">💼</span>
+
+                <!-- NOUVELLE VUE : GALERIE -->
+                <section id="view-gallery" class="view-section hidden">
+                    <div class="gallery-grid">
+                        <div class="gallery-card">
+                            <img src="assets/images/property_modern_1781261038361.png" alt="Futuristic Building">
+                            <div class="gallery-card-info">
+                                <h3>La Défense — Tour Horizon</h3>
+                                <p>Occupation: 98% • Valeur: 125M€</p>
+                                <span class="badge cyan">Performant</span>
                             </div>
-                            <div class="kpi-value" id="kpi-fin-revenue">0 €</div>
-                            <div class="kpi-trend">Ce mois</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Taux Collecte</span>
-                                <span class="kpi-icon">✅</span>
+                        <div class="gallery-card">
+                            <img src="assets/images/property_interior_1781261064628.png" alt="Luxury Interior">
+                            <div class="gallery-card-info">
+                                <h3>Paris 8e — Penthouse</h3>
+                                <p>Occupation: 100% • Loyer Premium</p>
+                                <span class="badge pink">Luxe</span>
                             </div>
-                            <div class="kpi-value" id="kpi-fin-collection">0 %</div>
-                            <div class="kpi-trend">Cible : 98%</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Dépenses OpEx</span>
-                                <span class="kpi-icon">📉</span>
+                        <div class="gallery-card">
+                            <img src="assets/images/banner_global_1781261008249.png" alt="Smart City">
+                            <div class="gallery-card-info">
+                                <h3>Courbevoie — Smart Hub</h3>
+                                <p>Occupation: 85% • Mixte Bureau/Logement</p>
+                                <span class="badge purple">En développement</span>
                             </div>
-                            <div class="kpi-value" id="kpi-fin-opex">0 €</div>
-                            <div class="kpi-trend">Ce mois</div>
-                        </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Marge Nette</span>
-                                <span class="kpi-icon">📈</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-fin-margin">0 €</div>
-                            <div class="kpi-trend">Rentabilité</div>
-                        </div>
-                    </div>
-                    
-                    <div class="charts-grid">
-                        <div class="chart-container">
-                            <h3>Résumé Mensuel (12 mois)</h3>
-                            <canvas id="chart-monthly-summary"></canvas>
-                        </div>
-                        
-                        <div class="chart-container">
-                            <h3>Structure des Coûts</h3>
-                            <canvas id="chart-cost-structure"></canvas>
                         </div>
                     </div>
                 </section>
-                
+
+                <!-- VUE FINANCIÈRE -->
+                <section id="view-financial" class="view-section hidden">
+                    <div class="banner-card">
+                        <img src="assets/images/banner_finance_1781261017310.png" alt="Finance Abstract">
+                        <div class="banner-content">
+                            <h2>Métriques Financières</h2>
+                            <p>Analyse des marges, OpEx et recouvrement.</p>
+                        </div>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-card" data-accent="cyan">
+                            <div class="kpi-header"><span class="kpi-label">Revenu Loyers</span><div class="kpi-icon-wrap cyan">💼</div></div>
+                            <div class="kpi-value" id="kpi-fin-revenue">—</div>
+                        </div>
+                        <div class="kpi-card" data-accent="purple">
+                            <div class="kpi-header"><span class="kpi-label">Taux Collecte</span><div class="kpi-icon-wrap purple">✅</div></div>
+                            <div class="kpi-value" id="kpi-fin-collection">—</div>
+                        </div>
+                        <div class="kpi-card" data-accent="pink">
+                            <div class="kpi-header"><span class="kpi-label">Dépenses OpEx</span><div class="kpi-icon-wrap pink">📉</div></div>
+                            <div class="kpi-value" id="kpi-fin-opex">—</div>
+                        </div>
+                        <div class="kpi-card" data-accent="orange">
+                            <div class="kpi-header"><span class="kpi-label">Marge Nette</span><div class="kpi-icon-wrap orange">📈</div></div>
+                            <div class="kpi-value" id="kpi-fin-margin">—</div>
+                        </div>
+                    </div>
+                    <div class="charts-grid">
+                        <div class="chart-container"><h3>Résumé Mensuel</h3><canvas id="chart-monthly-summary"></canvas></div>
+                        <div class="chart-container"><h3>Structure des Coûts</h3><canvas id="chart-cost-structure"></canvas></div>
+                    </div>
+                </section>
+
                 <!-- VUE COMMERCIALE -->
                 <section id="view-commercial" class="view-section hidden">
                     <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Taux Occupation Global</span>
-                                <span class="kpi-icon">🏘️</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-comm-occupancy">0 %</div>
-                            <div class="kpi-trend">Santé du portefeuille</div>
+                        <div class="kpi-card" data-accent="cyan">
+                            <div class="kpi-header"><span class="kpi-label">Taux Occupation</span><div class="kpi-icon-wrap cyan">🏘️</div></div>
+                            <div class="kpi-value" id="kpi-comm-occupancy">—</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Baux Expirants</span>
-                                <span class="kpi-icon">📅</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-comm-expirations">0</div>
-                            <div class="kpi-trend">Prochains mois</div>
+                        <div class="kpi-card" data-accent="orange">
+                            <div class="kpi-header"><span class="kpi-label">Baux Expirants</span><div class="kpi-icon-wrap orange">📅</div></div>
+                            <div class="kpi-value" id="kpi-comm-expirations">—</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Dépôts Collectés</span>
-                                <span class="kpi-icon">🔐</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-comm-deposits">0 €</div>
-                            <div class="kpi-trend">Garanties actives</div>
+                        <div class="kpi-card" data-accent="purple">
+                            <div class="kpi-header"><span class="kpi-label">Dépôts</span><div class="kpi-icon-wrap purple">🔐</div></div>
+                            <div class="kpi-value" id="kpi-comm-deposits">—</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Rotation Annuelle</span>
-                                <span class="kpi-icon">🔄</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-comm-turnover">0 %</div>
-                            <div class="kpi-trend">Stabilité locataires</div>
+                        <div class="kpi-card" data-accent="pink">
+                            <div class="kpi-header"><span class="kpi-label">Rotation</span><div class="kpi-icon-wrap pink">🔄</div></div>
+                            <div class="kpi-value" id="kpi-comm-turnover">—</div>
                         </div>
                     </div>
-                    
                     <div class="charts-grid">
-                        <div class="chart-container">
-                            <h3>Occupation par Immeuble</h3>
-                            <canvas id="chart-occupancy-building"></canvas>
-                        </div>
-                        
-                        <div class="chart-container">
-                            <h3>Tendance Occupation (6 mois)</h3>
-                            <canvas id="chart-occupancy-trend"></canvas>
-                        </div>
+                        <div class="chart-container"><h3>Occupation par Immeuble</h3><canvas id="chart-occupancy-building"></canvas></div>
+                        <div class="chart-container"><h3>Tendance (6 mois)</h3><canvas id="chart-occupancy-trend"></canvas></div>
                     </div>
                 </section>
-                
+
                 <!-- VUE OPÉRATIONNELLE -->
                 <section id="view-operational" class="view-section hidden">
                     <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Délai Résolution Moyen</span>
-                                <span class="kpi-icon">⏱️</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-op-resolution">0 j</div>
-                            <div class="kpi-trend">Cible : 3 jours</div>
+                        <div class="kpi-card" data-accent="cyan">
+                            <div class="kpi-header"><span class="kpi-label">Délai Résolution</span><div class="kpi-icon-wrap cyan">⏱️</div></div>
+                            <div class="kpi-value" id="kpi-op-resolution">—</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Demandes Ouvertes</span>
-                                <span class="kpi-icon">📂</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-op-open">0</div>
-                            <div class="kpi-trend">En cours</div>
+                        <div class="kpi-card" data-accent="orange">
+                            <div class="kpi-header"><span class="kpi-label">Demandes</span><div class="kpi-icon-wrap orange">📂</div></div>
+                            <div class="kpi-value" id="kpi-op-open">—</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Coût Moyen</span>
-                                <span class="kpi-icon">💸</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-op-avgcost">0 €</div>
-                            <div class="kpi-trend">Par demande</div>
+                        <div class="kpi-card" data-accent="purple">
+                            <div class="kpi-header"><span class="kpi-label">Coût Moyen</span><div class="kpi-icon-wrap purple">💸</div></div>
+                            <div class="kpi-value" id="kpi-op-avgcost">—</div>
                         </div>
-                        
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span class="kpi-label">Incidents Critiques</span>
-                                <span class="kpi-icon">🚨</span>
-                            </div>
-                            <div class="kpi-value" id="kpi-op-critical">0</div>
-                            <div class="kpi-trend">À surveiller</div>
+                        <div class="kpi-card" data-accent="pink">
+                            <div class="kpi-header"><span class="kpi-label">Incidents Critiques</span><div class="kpi-icon-wrap pink">🚨</div></div>
+                            <div class="kpi-value" id="kpi-op-critical">—</div>
                         </div>
                     </div>
-                    
                     <div class="charts-grid">
-                        <div class="chart-container">
-                            <h3>Délai Résolution vs Cible</h3>
-                            <canvas id="chart-resolution-trend"></canvas>
+                        <div class="chart-container"><h3>Délai Résolution</h3><canvas id="chart-resolution-trend"></canvas></div>
+                        <div class="chart-container"><h3>Demandes par Catégorie</h3><canvas id="chart-requests-category"></canvas></div>
+                    </div>
+                </section>
+
+                <!-- NOUVELLE VUE : ÉQUIPE -->
+                <section id="view-team" class="view-section hidden">
+                    <div class="team-grid">
+                        <div class="team-card">
+                            <div class="team-avatar-ring cyan">
+                                <img src="assets/images/avatar_corentin_1781261028342.png" alt="Corentin">
+                            </div>
+                            <h3>Corentin</h3>
+                            <p>Directeur Financier</p>
+                            <div class="team-stats">ROI: +12% ce trimestre</div>
                         </div>
-                        
-                        <div class="chart-container">
-                            <h3>Demandes par Catégorie</h3>
-                            <canvas id="chart-requests-category"></canvas>
+                        <div class="team-card">
+                            <div class="team-avatar-ring pink">
+                                <img src="assets/images/avatar_daniela_1781261053585.png" alt="Daniela">
+                            </div>
+                            <h3>Daniela</h3>
+                            <p>Directrice des Opérations</p>
+                            <div class="team-stats">Incidents résolus: 98%</div>
+                        </div>
+                        <div class="team-card">
+                            <div class="team-avatar-ring purple">
+                                <div class="avatar-placeholder">J</div>
+                            </div>
+                            <h3>Jonathan</h3>
+                            <p>Lead Data / Ingénieur IA</p>
+                            <div class="team-stats">Système en ligne</div>
+                        </div>
+                        <div class="team-card">
+                            <div class="team-avatar-ring orange">
+                                <div class="avatar-placeholder">J</div>
+                            </div>
+                            <h3>Jack</h3>
+                            <p>Responsable Commercial</p>
+                            <div class="team-stats">Occupation: 88%</div>
                         </div>
                     </div>
                 </section>
-                
+
                 <!-- VUE CARTE -->
                 <section id="view-map" class="view-section hidden">
                     <div class="map-container">
                         <div id="leaflet-map" class="leaflet-map"></div>
                         <div class="map-info">
-                            <h3>Localisation des Immeubles</h3>
-                            <p>Cliquez sur les marqueurs pour voir les détails</p>
-                            <div id="map-legend" class="map-legend">
-                                <div class="legend-item">
-                                    <span class="legend-color green"></span>
-                                    <span>Occupation forte (>80%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span class="legend-color yellow"></span>
-                                    <span>Occupation moyenne (50-80%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span class="legend-color red"></span>
-                                    <span>Occupation faible (<50%)</span>
-                                </div>
+                            <div class="map-info-block">
+                                <h3>📍 Hologram Map</h3>
+                                <p>Projection géographique de nos actifs en Île-de-France.</p>
                             </div>
                         </div>
                     </div>
                 </section>
-                
-            </div>
+
+            </div><!-- /.view-container -->
         </main>
-    </div>
-    
-    <!-- Main JavaScript -->
-    <script src="app_with_map.js"></script>
+
+        <!-- ==================================================
+             RIGHT SIDEBAR (ACTIVITY FEED)
+             ================================================== -->
+        <aside class="right-sidebar">
+            <h3>Live Feed</h3>
+            <div class="feed-item">
+                <div class="feed-icon pink">🔥</div>
+                <div class="feed-text">
+                    <strong>Alerte Critique</strong>
+                    <span>Fuite d'eau - Tour Horizon</span>
+                </div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-icon cyan">✅</div>
+                <div class="feed-text">
+                    <strong>Nouveau Bail</strong>
+                    <span>Signé à Courbevoie (+12k€/an)</span>
+                </div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-icon purple">💰</div>
+                <div class="feed-text">
+                    <strong>Loyer encaissé</strong>
+                    <span>98% de collecte atteinte</span>
+                </div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-icon orange">🛠️</div>
+                <div class="feed-text">
+                    <strong>Maintenance</strong>
+                    <span>Ascenseur réparé - Sceaux</span>
+                </div>
+            </div>
+            
+            <div class="ad-banner">
+                <img src="assets/images/property_modern_1781261038361.png" alt="Promo">
+                <p>Nouveau bien acquis !</p>
+            </div>
+        </aside>
+
+    </div><!-- /.dashboard -->
+
+    <!-- ======================================================
+         MOBILE BOTTOM NAV
+         ====================================================== -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <button class="bottom-nav-item active" data-view="global"><span class="nav-icon">✨</span></button>
+        <button class="bottom-nav-item" data-view="gallery"><span class="nav-icon">🏙️</span></button>
+        <button class="bottom-nav-item" data-view="financial"><span class="nav-icon">💎</span></button>
+        <button class="bottom-nav-item" data-view="team"><span class="nav-icon">🧑‍🎤</span></button>
+        <button class="bottom-nav-item" data-view="map"><span class="nav-icon">🗺️</span></button>
+    </nav>
+
+    <script src="app.js"></script>
 </body>
 </html>

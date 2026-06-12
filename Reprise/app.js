@@ -7,11 +7,11 @@
 
 const API_BASE = 'http://localhost:8000';
 
-// Chart.js global theme
+// Chart.js global theme for Neon Dashboard
 if (typeof Chart !== 'undefined') {
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = 'rgba(51, 65, 85, 0.55)';
-    Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
+    Chart.defaults.color = '#a395b5'; // text-muted
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)'; // glass-border
+    Chart.defaults.font.family = "'Inter', sans-serif";
     Chart.defaults.font.size = 12;
     Chart.defaults.plugins.legend.labels.usePointStyle = true;
     Chart.defaults.plugins.legend.labels.pointStyleWidth = 8;
@@ -114,11 +114,13 @@ function switchView(viewName) {
 
         // Update header title
         const titles = {
-            global:      'Vue Globale',
-            financial:   'Vue Financière',
-            commercial:  'Vue Commerciale',
-            operational: 'Vue Opérationnelle',
-            map:         'Carte des Immeubles'
+            global:      'Overview',
+            gallery:     'Galerie Immobilière',
+            financial:   'Finance & Tréso',
+            commercial:  'Activité Commerciale',
+            operational: 'Maintenance & Ops',
+            team:        'L\'Équipe',
+            map:         'Hologram Map'
         };
         document.getElementById('view-title').textContent = titles[viewName] || 'Dashboard';
 
@@ -275,16 +277,16 @@ function createRevenueExpenseChart(data) {
                 {
                     label: 'Revenus',
                     data: reversedData.map(d => d.revenue),
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderColor: '#00f0ff',
+                    backgroundColor: 'rgba(0, 240, 255, 0.1)',
                     tension: 0.4,
                     fill: true
                 },
                 {
                     label: 'Dépenses',
                     data: reversedData.map(d => d.expenses),
-                    borderColor: '#ef4444',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderColor: '#ff0055',
+                    backgroundColor: 'rgba(255, 0, 85, 0.1)',
                     tension: 0.4,
                     fill: true
                 }
@@ -308,11 +310,11 @@ function createIncidentDistributionChart(data) {
     }
     
     const colors = {
-        'Flood': '#3b82f6',
-        'Fire': '#ef4444',
-        'Leak': '#f59e0b',
-        'Electrical': '#8b5cf6',
-        'Structural': '#ec4899'
+        'Flood': '#00f0ff',
+        'Fire': '#ff0055',
+        'Leak': '#b026ff',
+        'Electrical': '#ff5500',
+        'Structural': '#ffffff'
     };
     
     charts['incident-distribution'] = new Chart(ctx, {
@@ -381,12 +383,12 @@ function createMonthlySummaryChart(data) {
                 {
                     label: 'Revenu Collecté',
                     data: reversedData.map(d => d.rent_collected),
-                    backgroundColor: '#10b981'
+                    backgroundColor: '#00f0ff'
                 },
                 {
                     label: 'Dépenses',
                     data: reversedData.map(d => d.operating_expenses),
-                    backgroundColor: '#ef4444'
+                    backgroundColor: '#ff0055'
                 }
             ]
         },
@@ -405,9 +407,9 @@ function createCostStructureChart(data) {
     }
     
     const colors = {
-        'Maintenance': '#3b82f6',
-        'Utility': '#f59e0b',
-        'Tax': '#ef4444'
+        'Maintenance': '#00f0ff',
+        'Utility': '#b026ff',
+        'Tax': '#ff0055'
     };
     
     charts['cost-structure'] = new Chart(ctx, {
@@ -474,7 +476,7 @@ function createOccupancyByBuildingChart(data) {
             datasets: [{
                 label: 'Taux Occupation',
                 data: data.slice(0, 15).map(d => d.occupancy_rate),
-                backgroundColor: '#3b82f6'
+                backgroundColor: '#00f0ff'
             }]
         },
         options: {
@@ -504,7 +506,7 @@ function createOccupancyTrendChart(data) {
                     const total = d.total_leases || 0;
                     return total > 0 ? ((d.occupied / total) * 100).toFixed(1) : 0;
                 }),
-                borderColor: '#10b981',
+                borderColor: '#00f0ff',
                 tension: 0.4,
                 fill: false
             }]
@@ -556,10 +558,10 @@ function createRequestsByCategoryChart(data) {
     }
     
     const colors = {
-        'Plumbing': '#3b82f6',
-        'Electrical': '#8b5cf6',
-        'HVAC': '#f59e0b',
-        'General': '#10b981'
+        'Plumbing': '#00f0ff',
+        'Electrical': '#b026ff',
+        'HVAC': '#ff5500',
+        'General': '#ff0055'
     };
     
     charts['requests-category'] = new Chart(ctx, {
@@ -592,13 +594,13 @@ function createResolutionTrendChart(data) {
                 {
                     label: 'Délai Réel',
                     data: reversedData.map(d => d.avg_resolution_days),
-                    borderColor: '#ef4444',
+                    borderColor: '#ff0055',
                     tension: 0.4
                 },
                 {
                     label: 'Cible (3j)',
                     data: Array(reversedData.length).fill(3),
-                    borderColor: '#10b981',
+                    borderColor: '#00f0ff',
                     borderDash: [5, 5],
                     tension: 0
                 }
