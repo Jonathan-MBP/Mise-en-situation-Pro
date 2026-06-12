@@ -7,6 +7,16 @@
 
 const API_BASE = 'http://localhost:8000';
 
+// Chart.js global theme
+if (typeof Chart !== 'undefined') {
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = 'rgba(51, 65, 85, 0.55)';
+    Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.pointStyleWidth = 8;
+}
+
 // ============================================================================
 // DATA STORAGE
 // ============================================================================
@@ -31,8 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('📊 Dashboard Dirigeants — Initializing...');
     
     initNavigation();
+    initMobileNav();
     loadAllData();
     setupRefreshButton();
+
+    // Initial entrance animation on the active view
+    const initial = document.querySelector('.view-section.active');
+    if (initial) {
+        initial.classList.add('view-enter');
+        setTimeout(() => initial.classList.remove('view-enter'), 400);
+    }
 });
 
 // ============================================================================
@@ -40,46 +58,78 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================================
 
 function initNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
-    
+    const navItems    = document.querySelectorAll('.nav-item');
+    const hamburger   = document.getElementById('hamburger-btn');
+    const sidebar     = document.getElementById('sidebar');
+    const overlay     = document.getElementById('sidebar-overlay');
+
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
-            
+
             const viewName = item.dataset.view;
-            
-            // Update active nav item
+
             navItems.forEach(nav => nav.classList.remove('active'));
             item.classList.add('active');
-            
-            // Update active section
+
             switchView(viewName);
+
+            // Auto-close sidebar on tablet/mobile
+            if (window.innerWidth <= 960) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            }
         });
     });
+
+    // Hamburger toggle
+    if (hamburger && sidebar && overlay) {
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+    }
 }
 
 function switchView(viewName) {
     const sections = document.querySelectorAll('.view-section');
-    sections.forEach(section => section.classList.add('hidden'));
-    
+    sections.forEach(section => {
+        section.classList.add('hidden');
+        section.classList.remove('view-enter');
+    });
+
     const activeSection = document.getElementById(`view-${viewName}`);
     if (activeSection) {
         activeSection.classList.remove('hidden');
-        
+
+        // Trigger entrance animation
+        void activeSection.offsetWidth; // force reflow
+        activeSection.classList.add('view-enter');
+        setTimeout(() => activeSection.classList.remove('view-enter'), 450);
+
         // Update header title
         const titles = {
-            global: 'Vue Globale',
-            financial: 'Vue Financière',
-            commercial: 'Vue Commerciale',
+            global:      'Vue Globale',
+            financial:   'Vue Financière',
+            commercial:  'Vue Commerciale',
             operational: 'Vue Opérationnelle',
-            map: 'Carte des Immeubles'
+            map:         'Carte des Immeubles'
         };
-        
         document.getElementById('view-title').textContent = titles[viewName] || 'Dashboard';
-        
+
+        // Sync bottom nav active state
+        document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === viewName);
+        });
+
         // Initialize map when switching to map view
         if (viewName === 'map' && !mapInstance) {
-            setTimeout(() => initializeMap(), 100);
+            setTimeout(() => initializeMap(), 120);
         }
     }
 }
@@ -170,9 +220,13 @@ async function loadAllData() {
         
         // Update timestamp
         updateTimestamp();
-        
+
+        // Hide loading overlay
+        hideLoadingOverlay();
+
     } catch (error) {
         console.error('❌ Error loading data:', error);
+        hideLoadingOverlay();
         alert('Erreur : Impossible de charger les données. Vérifiez que l\'API est accessible à http://localhost:8000');
     }
 }
@@ -377,7 +431,7 @@ function populateCommercialView() {
     const data = allData.commercial;
     
     if (data.occupancy && data.occupancy.length > 0) {
-        const avgOccupancy = data.occupancy.reduce((sum, d) => sum + d.occupancy_rate, 0) / data.occupancy.length;
+        const avgOccupancy = data.occupancy.reduce((sum, d) => sum + (d.occupancy_rate || 0), 0) / data.occupancy.length;
         document.getElementById('kpi-comm-occupancy').textContent = 
             avgOccupancy.toFixed(1) + ' %';
         
@@ -391,7 +445,14 @@ function populateCommercialView() {
     
     if (data.turnover && typeof data.turnover === 'object') {
         document.getElementById('kpi-comm-turnover').textContent = 
-            data.turnover.turnover_rate.toFixed(1) + ' %';
+            (data.turnover.turnover_rate ?? 0).toFixed(1) + ' %';
+    }
+    
+    // Populate deposits KPI
+    const deposits = allData.financial?.deposits;
+    if (deposits && typeof deposits === 'object' && deposits.total_held != null) {
+        document.getElementById('kpi-comm-deposits').textContent =
+            formatCurrency(deposits.total_held);
     }
     
     if (data.trend && data.trend.length > 0) {
@@ -439,7 +500,10 @@ function createOccupancyTrendChart(data) {
             labels: reversedData.map(d => d.period),
             datasets: [{
                 label: 'Taux Occupation',
-                data: reversedData.map(d => (d.occupied / d.total_leases * 100).toFixed(1)),
+                data: reversedData.map(d => {
+                    const total = d.total_leases || 0;
+                    return total > 0 ? ((d.occupied / total) * 100).toFixed(1) : 0;
+                }),
                 borderColor: '#10b981',
                 tension: 0.4,
                 fill: false
@@ -458,11 +522,21 @@ function populateOperationalView() {
     
     if (data.maintenance && typeof data.maintenance === 'object') {
         document.getElementById('kpi-op-resolution').textContent = 
-            data.maintenance.avg_resolution_days.toFixed(1) + ' j';
+            (data.maintenance.avg_resolution_days ?? 0).toFixed(1) + ' j';
         document.getElementById('kpi-op-open').textContent = 
-            'N/A'; // Would need separate count
+            data.maintenance.open_requests ?? 0;
         document.getElementById('kpi-op-avgcost').textContent = 
             formatCurrency(data.maintenance.avg_cost);
+    }
+    
+    // Critical incidents count from incidents summary
+    if (data.incidents && data.incidents.length > 0) {
+        const criticalCount = data.incidents
+            .filter(d => d.severity === 'Critical')
+            .reduce((sum, d) => sum + d.count, 0);
+        document.getElementById('kpi-op-critical').textContent = criticalCount;
+    } else {
+        document.getElementById('kpi-op-critical').textContent = 0;
     }
     
     if (data.category && data.category.length > 0) {
@@ -626,6 +700,37 @@ function setupRefreshButton() {
         console.log('🔄 Refreshing data...');
         location.reload();
     });
+}
+
+// ============================================================================
+// MOBILE BOTTOM NAV
+// ============================================================================
+
+function initMobileNav() {
+    const bottomItems   = document.querySelectorAll('.bottom-nav-item');
+    const sidebarItems  = document.querySelectorAll('.nav-item');
+
+    bottomItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const viewName = item.dataset.view;
+
+            // Sync sidebar active state
+            sidebarItems.forEach(nav => nav.classList.remove('active'));
+            const match = document.querySelector(`.nav-item[data-view="${viewName}"]`);
+            if (match) match.classList.add('active');
+
+            switchView(viewName);
+        });
+    });
+}
+
+// ============================================================================
+// LOADING OVERLAY
+// ============================================================================
+
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.classList.add('hidden');
 }
 
 console.log('✅ Dashboard JavaScript loaded');
