@@ -22,7 +22,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -61,20 +62,63 @@ body {
 
 .sidebar-header {
     margin-bottom: 40px;
-    text-align: center;
+}
+
+.sidebar-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.site-logo-circle {
+    width: 44px;
+    height: 44px;
+    background: #ffffff;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: var(--transition);
+}
+
+.site-logo-circle:hover {
+    transform: scale(1.08);
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.site-logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.sidebar-logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .logo {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--color-accent-blue);
-    margin-bottom: 5px;
+    margin-bottom: 2px;
+    line-height: 1.1;
 }
 
 .logo-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--color-text-secondary);
     font-weight: 500;
+    line-height: 1.1;
 }
 
 /* ============================================================================
@@ -482,7 +526,7 @@ body {
     .dashboard {
         flex-direction: column;
     }
-    
+
     .sidebar {
         width: 100%;
         height: auto;
@@ -491,22 +535,22 @@ body {
         justify-content: space-between;
         align-items: center;
     }
-    
+
     .sidebar-header {
         margin-bottom: 0;
     }
-    
+
     .sidebar-nav {
         flex-direction: row;
         gap: 5px;
         flex: 1;
         margin: 0 20px;
     }
-    
+
     .nav-label {
         display: none;
     }
-    
+
     .sidebar-footer {
         border-top: none;
         border-left: 1px solid var(--color-border);
@@ -514,19 +558,19 @@ body {
         padding-left: 20px;
         text-align: right;
     }
-    
+
     .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .map-container {
         grid-template-columns: 1fr;
         height: auto;
         min-height: 400px;
     }
-    
+
     .map-info {
-        grid-order: -1;
+        order: -1;
     }
 }
 
@@ -535,16 +579,16 @@ body {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .sidebar-nav {
         flex-direction: column;
         margin: 0;
     }
-    
+
     .nav-label {
         display: inline;
     }
-    
+
     .sidebar-footer {
         border-left: none;
         border-top: 1px solid var(--color-border);
@@ -552,14 +596,70 @@ body {
         padding-left: 0;
         text-align: center;
     }
-    
+
     .kpi-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .header {
         flex-direction: column;
         gap: 15px;
         text-align: center;
     }
+}
+
+/* ============================================================================
+   ARABIC LANGUAGE (RTL TEXT ONLY, KEEP LTR LAYOUT)
+   ============================================================================ */
+
+body.lang-ar {
+    direction: ltr; /* Keeps structural grids and layouts in LTR */
+}
+
+/* Force text inside content cards, headers, and popups to be RTL and right-aligned */
+body.lang-ar .sidebar-logo-text,
+body.lang-ar .nav-label,
+body.lang-ar .sidebar-footer,
+body.lang-ar .header-title,
+body.lang-ar .kpi-label,
+body.lang-ar .kpi-trend,
+body.lang-ar .chart-container h3,
+body.lang-ar .map-info h3,
+body.lang-ar .map-info p,
+body.lang-ar .map-info-item,
+body.lang-ar .detail-row,
+body.lang-ar .leaflet-popup-content,
+body.lang-ar .maintenance-item,
+body.lang-ar .incident-item,
+body.lang-ar .kpi-trend-info,
+body.lang-ar .last-update-prefix {
+    direction: rtl;
+    text-align: right;
+}
+
+body.lang-ar .kpi-value {
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
+    text-align: right;
+}
+
+body.lang-ar .numeric-value {
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
+    display: inline-block;
+}
+
+/* Keep structural layout items aligned correctly */
+body.lang-ar .nav-item {
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+body.lang-ar .sidebar-logo-container {
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+body.lang-ar .sidebar-logo-text {
+    align-items: flex-start;
 }

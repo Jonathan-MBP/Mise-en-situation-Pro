@@ -526,7 +526,7 @@ body {
     }
     
     .map-info {
-        grid-order: -1;
+        order: -1;
     }
 }
 

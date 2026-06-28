@@ -202,7 +202,7 @@ for unit_id in available_units[:target_occupied]:
         'end_date': lease_end.date(),
         'monthly_rent': round(unit_rent * (1 + np.random.normal(0, 0.05)), 2),
         'deposit_amount': round(unit_rent * 2, 2),
-        'status': 'Active' if lease_end > datetime(2024, 12, 31) else 'Terminated',
+        'status': 'Active' if lease_end >= datetime(2024, 12, 31) else 'Terminated',
         'created_at': lease_start.date()
     })
     lease_id += 1
